@@ -34,7 +34,7 @@
     <string name="could_not_verify_user">È stato impossibile controllare i dati dell\'utente. Riprovare più tardi</string>
     <string name="found_bike_message">Sembra che tu abbia ritrovato la tua bici! Confermi?</string>
     <string name="lost_bike_message">Stai per segnalare questa bici come \"smarrita\".\nAggiungi qualche dettaglio.</string>
-    <string name="found_lost_bike_message">Il properietario ha segnalato questa bici come \"smarrita\".\nVuoi segnalargli il tuo ritrovamento?</string>
+    <string name="found_lost_bike_message">Il proprietario ha segnalato questa bici come \"smarrita\".\nVuoi comunicargli il tuo ritrovamento?</string>
     <string name="send">Invia</string>
     <string name="lost_bike_report_title">Segnala Bici Smarrita</string>
 	<string name="prizes_header">Premi</string>
@@ -343,4 +343,6 @@
     <string name="bike_not_lost_message">La bici non è segnalata come smarrita</string>
     <string name="alarm_on">Allarme On</string>
     <string name="alarm_off">Allarme Off</string>
+    <string name="personalize_bike">Personalizza la tua bici</string>
+
 </resources>

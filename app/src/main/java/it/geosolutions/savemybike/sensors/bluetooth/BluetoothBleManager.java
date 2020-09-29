@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
@@ -52,6 +53,8 @@ public class BluetoothBleManager {
 
     private ContextWrapper currentContext;
 
+    private OperationQueue opQueue;
+
     public final static UUID UUID_SAVEMYBIKE_SERVICE = UUID.fromString("00001583-1212-efde-1523-785feabcd123");
 
     public final static UUID UUID_SAVEMYBIKE_CHARACTERISTIC = UUID.fromString("00001584-1212-efde-1523-785feabcd123");
@@ -77,6 +80,7 @@ public class BluetoothBleManager {
     private BluetoothBleManager(int scanMode) {
         this.settings = (new ScanSettings.Builder().setScanMode(scanMode)).build();
         this.scanCallback = new SMBScanCallBack();
+        this.opQueue=new OperationQueue();
     }
 
     public static BluetoothBleManager get (int scanMode) {
@@ -205,7 +209,13 @@ public class BluetoothBleManager {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
-        mBluetoothGatt.writeCharacteristic(characteristic);
+        this.opQueue.addCommand(new Runnable() {
+            @Override
+            public void run() {
+                mBluetoothGatt.writeCharacteristic(characteristic);
+            }
+        });
+        opQueue.executeCommand();
     }
 
     public void setAlarmMode(int mode)
@@ -232,6 +242,42 @@ public class BluetoothBleManager {
                         strBytes[1] = (byte)(0x03); //BUZLED
                         break;
                 }
+                characteristic.setValue(strBytes);
+                writeCharacteristic(characteristic);
+            }
+        }
+    }
+
+    /**
+     * Start device
+     */
+    public void startDevice()
+    {
+        if(mBluetoothGatt != null && mBluetoothGatt.getService(UUID_SAVEMYBIKE_SERVICE) != null)
+        {
+            BluetoothGattCharacteristic characteristic = mBluetoothGatt.getService(UUID_SAVEMYBIKE_SERVICE).getCharacteristic(UUID_SAVEMYBIKE_CHARACTERISTIC);
+            if(characteristic != null)
+            {
+                byte[] strBytes = new byte[1];
+                strBytes[0] = (byte)(0xA1);
+                characteristic.setValue(strBytes);
+                writeCharacteristic(characteristic);
+            }
+        }
+    }
+
+    /**
+     * Stop device
+     */
+    public void stopDevice()
+    {
+        if(mBluetoothGatt != null && mBluetoothGatt.getService(UUID_SAVEMYBIKE_SERVICE) != null)
+        {
+            BluetoothGattCharacteristic characteristic = mBluetoothGatt.getService(UUID_SAVEMYBIKE_SERVICE).getCharacteristic(UUID_SAVEMYBIKE_CHARACTERISTIC);
+            if(characteristic != null)
+            {
+                byte[] strBytes = new byte[1];
+                strBytes[0] = (byte)(0xA2);
                 characteristic.setValue(strBytes);
                 writeCharacteristic(characteristic);
             }
@@ -305,6 +351,7 @@ public class BluetoothBleManager {
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
         }
+
     }
 
 
@@ -349,6 +396,13 @@ public class BluetoothBleManager {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
+            opQueue.nextCommand();
+            opQueue.executeCommand();
+        }
+
+        @Override
+        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+            super.onDescriptorWrite(gatt, descriptor, status);
         }
     };
 }

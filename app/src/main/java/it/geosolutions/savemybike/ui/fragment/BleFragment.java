@@ -90,8 +90,8 @@ public class BleFragment extends Fragment implements IOnBackPressed {
         super.onDestroy();
         showFrame(false);
         manager.stopScan();
-        manager.disconnect();
-        manager.setActive(false);
+        //manager.disconnect();
+        //manager.setActive(false);
     }
 
     public void issueRequest(String uuid) {
@@ -103,12 +103,8 @@ public class BleFragment extends Fragment implements IOnBackPressed {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         manager.stopScan();
-
                         String jsonBike = getJsonBikeFromResponseBody(response);
                         Bike bikeObj = jsonBike != null ? new Gson().fromJson(jsonBike, Bike.class) : null;
-                        showLoading(false);
-                        showFrame(true);
-
                         if (bikeObj != null) {
                             bikeName.setText(bikeObj.getName() != null ? bikeObj.getName() : bikeObj.getNickname());
                             bleAddress = uuid;
@@ -116,6 +112,8 @@ public class BleFragment extends Fragment implements IOnBackPressed {
                                 manager.connect(bleAddress);
                             }
                         }
+                        showLoading(false);
+                        showFrame(true);
                     }
                 }
         );
@@ -131,12 +129,16 @@ public class BleFragment extends Fragment implements IOnBackPressed {
 
     @OnClick(R.id.alarm_on)
     public void alarmOnClicked(){
+        manager.startDevice();
         manager.setAlarmMode(3);
     }
 
     @OnClick(R.id.alarm_off)
     public void alarmOffClicked(){
         manager.setAlarmMode(0);
+        manager.stopDevice();
+        manager.disconnect();
+        manager.setActive(false);
     }
 
 

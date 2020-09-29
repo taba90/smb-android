@@ -43,6 +43,10 @@
             android:id="@+id/navigation_about"
             android:icon="@drawable/ic_about"
             android:title="@string/about" />
+        <item
+            android:id="@+id/personalization"
+            android:icon="@drawable/ic_personalize"
+            android:title="@string/personalize_bike"/>
     </group>
     <group
         android:id="@+id/menu_bottom"

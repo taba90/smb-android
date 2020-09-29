@@ -376,5 +376,6 @@
     <string name="bike_not_lost_message">The bike is not marked as lost</string>
     <string name="alarm_on">Alarm On</string>
     <string name="alarm_off">Alarm Off</string>
+    <string name="personalize_bike">Personalize your bike</string>
 
 </resources>

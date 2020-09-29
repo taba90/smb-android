@@ -777,6 +777,9 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 bundle.putString(EXTRA_DATA, extraData[0]);
                 fragment.setArguments(bundle);
                 break;
+            case R.id.personalization:
+                goToURL("http://custom.parkpre.it/savemybike");
+
             default:
                 break;
         }
@@ -1255,6 +1258,12 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             return true;
         }
         return false;
+    }
+
+    private void goToURL(String url){
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
     }
 
 

@@ -33,13 +33,14 @@
 
             <TextView
                 android:id="@+id/bike_ble_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:padding="10dp"
                 android:textSize="19.0sp"
                 app:layout_constraintTop_toBottomOf="@+id/bike_image"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                />
             <LinearLayout
                 android:id="@+id/alarms_btn_layout"
                 android:layout_width="wrap_content"
